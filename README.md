@@ -1,0 +1,1 @@
+The main file is for live use and the test is for offline testing for trading.
