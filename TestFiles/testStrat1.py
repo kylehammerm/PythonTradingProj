@@ -23,8 +23,8 @@ def signal_generator(df):
         return 0
 
 
-curr_date = '2023-01-01'
-start_date = '2022-12-01'
+curr_date = '2023-01-19'
+start_date = '2022-11-21'
 interval = '2m'
 
 stock_symbol = 'NVDA'
@@ -75,24 +75,37 @@ def mock_bot(wallet: int, time: str, verbose: bool):
     wallet += stock * data_df[time][len(data_df[time])-1]
     if verbose:
         print(history)
-    return wallet, total_stock
+    return wallet, total_stock, history
 
 
 initial = 1000
-w1, t1 = mock_bot(initial, 'Open', False)
-w2, t2 = mock_bot(initial, 'Close', False)
+w1, t1, h1 = mock_bot(initial, 'Open', False)
+w2, t2, h2 = mock_bot(initial, 'Close', False)
 
-print(f"Open Strategy: ${w1}", f"Close Strategy: ${w2}", f"Difference: ${w1-w2}")
-print(f"Open Strategy Gain: {(w1-initial)/initial*100}%", f"Close Strategy Gain: {(w2-initial)/initial*100}%", f"Difference: {(w1-w2)/initial*100}%")
-print(f"Total Stock Open Strategy: {t1}", f"Total Stock Close Strategy: {t2}", f"Difference: {t1-t2}")
+print(f"Open Strategy: ${w1}",
+      f"Close Strategy: ${w2}",
+      f"Difference: ${w1-w2}")
+
+print(f"Open Strategy Gain: {(w1-initial)/initial*100}%",
+      f"Close Strategy Gain: {(w2-initial)/initial*100}%",
+      f"Difference: {(w1-w2)/initial*100}%")
+
+print(f"Total Stock Open Strategy: {t1}",
+      f"Total Stock Close Strategy: {t2}",
+      f"Difference: {t1-t2}")
 
 color = "g"
 for i in range(1, len(signal)):
     # decides the color based on whether we are holding the stock or not
     if data_df['Close'][i-1] < data_df['Close'][i]:
-        color = "g"
+        style = '-'
     else:
-        color = "r"
+        style = '--'
+    if h1[i]['stock'] > 0:
+        color = 'g'
+    else:
+        color = 'r'
     # red means don't have the stock green means we own it
-    plt.plot([i - 1, i], [data_df['Close'][i - 1], data_df['Close'][i]], color=color)
+    plt.plot([i - 1, i], [data_df['Close'][i - 1], data_df['Close'][i]], linestyle=style, color=color)
+
 plt.show()
