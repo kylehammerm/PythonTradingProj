@@ -1,8 +1,6 @@
-
-import pandas as pd
-
+from matplotlib import pyplot as plt
 import yfinance as yf
-from yahoofinancials import YahooFinancials
+
 
 def signal_generator(df):
     # Gets the open and close for today
@@ -46,43 +44,52 @@ for i in range(1, len(data_df)):
 # Adds the signals to the data frame
 data_df['Signal'] = signal
 
+print(data_df.Signal.value_counts())
+
 def mock_bot(wallet: int, time: str, verbose: bool):
     stock = 0
-    total_stock = 0
     history = []
     for i in range(len(data_df['Signal'])):
         f = i + (0 if time == 'Close' else 1)
         try:
             match data_df['Signal'][f]:
                 case 0:
-                    if verbose:
-                        print(f"[UNCLEAR] Holding: {data_df[time][f]}")
+                    print(f"[UNCLEAR] Holding: {data_df[time][f]}")
                 case 1:
-                    if verbose:
-                        print(f"[BEARISH] Selling: {data_df[time][f]}")
+                    print(f"[BEARISH] Selling: {data_df[time][f]}")
                     wallet += stock * data_df[time][f]
                     stock = 0
                 case 2:
-                    if verbose:
-                        print(f"[BULLISH] Buying: {data_df[time][f]}")
-                    newStock = wallet / data_df[time][f]
+                    print(f"[BULLISH] Buying: {data_df[time][f]}")
+                    newStock = wallet // data_df[time][f]
                     wallet -= data_df[time][f] * newStock
                     stock += newStock
-                    total_stock += newStock
         except IndexError:
             pass
-        history.append({'wallet': wallet, 'stock': stock})
+        history.append({'wallet': wallet, 'stock': stock});
 
     wallet += stock * data_df[time][len(data_df[time])-1]
     if verbose:
         print(history)
-    return wallet, total_stock
+    return wallet
 
 
 initial = 1000
-w1, t1 = mock_bot(initial, 'Open', False)
-w2, t2 = mock_bot(initial, 'Close', False)
+w1 = mock_bot(initial, 'Open', 0)
+w2 = mock_bot(initial, 'Close', 0)
 
-print(f"Open Strategy: ${w1}", f"Close Strategy: ${w2}", f"Difference: ${w1-w2}")
-print(f"Open Strategy Gain: {(w1-initial)/initial*100}%", f"Close Strategy Gain: {(w2-initial)/initial*100}%", f"Difference: {(w1-w2)/initial*100}%")
-print(f"Total Stock Open Strategy: {t1}", f"Total Stock Close Strategy: {t2}", f"Difference: {t1-t2}")
+print(w1, w2, w1-w2)
+print((w1-initial)/initial*100, (w2-initial)/initial*100, (w1-w2)/initial*100)
+color = "g"
+for i in range(1, len(signal)):
+
+    # decides the color based on whether we are holding the stock or not
+    if signal[i] == 1:
+        color = "r"
+    elif signal[i] == 2:
+        color = "g"
+    else:
+        color = color
+    # red means don't have the stock green means we own it
+    plt.plot([i - 1, i], [data_df['Close'][i - 1], data_df['Close'][i]], color=color)
+plt.show()
