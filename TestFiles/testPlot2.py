@@ -29,7 +29,7 @@ interval = '1d'
 start = dt.datetime(2020, 1, 1)
 end = dt.datetime(2022, 2, 2)
 
-Stock = yf.download('TSLA', start=start, end=end, interval=interval)
+Stock = yf.download('GE', start=start, end=end, interval=interval)
 style.use('ggplot')
 
 signal = [0]
@@ -42,7 +42,7 @@ for i in range(1, len(Stock)):
 color = "g"
 for i in range(1, len(signal)):
 
-    # decides the color based on wheather we are holding the stock or not
+    # decides the color based on whether we are holding the stock or not
     if signal[i] == 1:
         color = "r"
     elif signal[i] == 2:
