@@ -23,8 +23,8 @@ def signal_generator(df):
         return 0
 
 
-curr_date = '2023-01-19'
-start_date = '2022-11-21'
+curr_date = '2023-01-21'
+start_date = '2022-11-23'
 interval = '2m'
 
 stock_symbol = 'NVDA'
