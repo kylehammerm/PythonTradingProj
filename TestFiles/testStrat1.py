@@ -37,7 +37,7 @@ print(type(data_df))
 signal = [0]
 for i in range(1, len(data_df)):
     # Gets last two days
-    df = data_df[i-1:i+1]
+    df = data_df[i - 1:i + 1]
 
     # Generates the signal for the two days
     signal.append(signal_generator(df))
@@ -46,6 +46,7 @@ for i in range(1, len(data_df)):
 data_df['Signal'] = signal
 
 print(data_df.Signal.value_counts())
+
 
 def mock_bot(wallet: int, time: str, verbose: bool):
     stock = 0
@@ -74,7 +75,7 @@ def mock_bot(wallet: int, time: str, verbose: bool):
             pass
         history.append({'wallet': wallet, 'stock': stock})
 
-    wallet += stock * data_df[time][len(data_df[time])-1]
+    wallet += stock * data_df[time][len(data_df[time]) - 1]
     if verbose:
         print(history)
     return wallet, total_stock, history
@@ -84,9 +85,10 @@ initial = 1000
 w1, t1, h1 = mock_bot(initial, 'Open', False)
 w2, t2, h2 = mock_bot(initial, 'Close', False)
 
-print(f"Open Strategy: ${w1}", f"Close Strategy: ${w2}", f"Difference: ${w1-w2}")
-print(f"Open Strategy Gain: {(w1-initial)/initial*100}%", f"Close Strategy Gain: {(w2-initial)/initial*100}%", f"Difference: {(w1-w2)/initial*100}%")
-print(f"Total Stock Open Strategy: {t1}", f"Total Stock Close Strategy: {t2}", f"Difference: {t1-t2}")
+print(f"Open Strategy: ${w1}", f"Close Strategy: ${w2}", f"Difference: ${w1 - w2}")
+print(f"Open Strategy Gain: {(w1 - initial) / initial * 100}%",
+      f"Close Strategy Gain: {(w2 - initial) / initial * 100}%", f"Difference: {(w1 - w2) / initial * 100}%")
+print(f"Total Stock Open Strategy: {t1}", f"Total Stock Close Strategy: {t2}", f"Difference: {t1 - t2}")
 color = "g"
 for i in range(1, len(signal)):
 
