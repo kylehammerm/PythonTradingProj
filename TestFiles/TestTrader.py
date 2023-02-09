@@ -1,7 +1,6 @@
-from TestFiles import Trader1
+import Trader1
 import yfinance as yf
 import datetime as dt
-
 
 def signal_generator(df):
     # Gets the open and close for today
@@ -27,14 +26,16 @@ def signal_generator(df):
 
 interval = '1h'
 # gets the dates we will use
-start = dt.datetime(2020, 1, 1)
-end = dt.datetime(2022, 2, 2)
+start = dt.datetime(2021, 2, 9)
+end = dt.datetime(2023, 2, 8)
 
-Stock = yf.download('GE', start=start, end=end, interval=interval)
+Stock = yf.download('TSLA', start=start, end=end, interval=interval)
 
-k = Trader1(10000, Stock[0])
+k = Trader1.Trader(10000, Stock['Open'][0])
 
 for i in range(1, len(Stock)):
     # Gets last two days
     df = Stock[i - 1:i + 1]
-    k.singalInterp(signal_generator(df), Stock[i])
+    k.singalInterp(signal_generator(df), Stock['Open'][i])
+
+k.report()
